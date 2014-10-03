@@ -3,6 +3,7 @@ new-api
 
 __Startup__:
 ```shell
+./gen-cert.sh local.ldsconnect.org
 npm install -g grunt-cli
 npm install
 npm start
@@ -18,3 +19,10 @@ __Docs:__
 * [Controllers](/lib/controllers/README.md)
 * [Middleware](/lib/middleware/README.md)
 * [Samples](/samples/README.md)
+
+
+Authorization:
+
+* header: 'authorization': 'bearer {token}'
+* body: access_token={token}
+* query: access_token={token}
