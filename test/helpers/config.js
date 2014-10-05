@@ -11,7 +11,7 @@ if (!fs.existsSync(pathUncovered)) {
 
 var config = require(pathUncovered + 'config');
 
-config.database.database = 'test_database';
+config.database.database = config.database.database  + '-test';
 
 module.exports = _.extend(config, {
     pathCovered: pathCovered,

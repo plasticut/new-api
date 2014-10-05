@@ -17,7 +17,7 @@ describe('controllers', function() {
                 user.create({}, { name: 'test-name', surname: 'test-surname' }, function(err, res) {
                     if (err) { return done(err); }
 
-                    assert.deepEqual(res, [{"name":"test-name","surname":"test-surname","id":1}]);
+                    assert.deepEqual(res, [{'name':'test-name','surname':'test-surname','id':1}]);
 
                     done();
                 });

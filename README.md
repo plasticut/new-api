@@ -26,3 +26,38 @@ Authorization:
 * header: 'authorization': 'bearer {token}'
 * body: access_token={token}
 * query: access_token={token}
+
+__Prepare database:__
+
+```shell
+sudo subl /etc/mysql/my.cnf
+```
+
+```ini
+[mysqld]
+character-set-server=utf8
+collation-server=utf8_general_ci
+init_connect='SET collation_connection = utf8_general_ci'
+init_connect='SET NAMES utf8'
+skip-character-set-client-handshake
+
+[client]
+default-character-set=utf8
+
+[mysqldump]
+default-character-set=utf8
+```
+
+```shell
+sudo service mysql restart
+mysql -u root -p
+```
+
+```sql
+CREATE DATABASE `new-api`;
+CREATE DATABASE `new-api-test`;
+CREATE USER 'dev'@'localhost' IDENTIFIED BY 'eloper';
+GRANT ALL PRIVILEGES ON `new-api`.* TO 'dev'@'localhost';
+GRANT ALL PRIVILEGES ON `new-api-test`.* TO 'dev'@'localhost';
+FLUSH PRIVILEGES;
+```
