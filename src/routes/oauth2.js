@@ -1,6 +1,7 @@
 /**
- * Module dependencies.
- */
+    @module routes/oauth2
+*/
+
 var db = require('../lib/database'),
     login = require('connect-ensure-login'),
     logger = require('../lib/logger')(module),

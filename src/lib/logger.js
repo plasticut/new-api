@@ -1,3 +1,7 @@
+/**
+    @module lib/logger
+*/
+
 var winston = require('winston');
 
 function getLogger(module) {

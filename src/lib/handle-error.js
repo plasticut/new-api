@@ -1,3 +1,7 @@
+/**
+    @module lib/handle-error
+*/
+
 var orm = require('orm');
 
 module.exports = function handleErrorWrapper(next, fn) {

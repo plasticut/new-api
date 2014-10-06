@@ -1,3 +1,7 @@
+/**
+    @module models/user
+*/
+
 var logger = require('../lib/logger')(module);
 var _ = require('lodash');
 var orm = require('orm');

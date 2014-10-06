@@ -1,3 +1,7 @@
+/**
+    @module lib/controller-loader
+*/
+
 var glob = require('glob');
 var _ = require('lodash');
 var path = require('path');

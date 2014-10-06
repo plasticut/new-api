@@ -1,3 +1,7 @@
+/**
+    @module lib/passport
+*/
+
 var logger = require('./logger')(module);
 
 function setup(passport) {

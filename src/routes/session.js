@@ -1,3 +1,7 @@
+/**
+    @module routes/session
+*/
+
 var passport = require('passport');
 var _ = require('lodash');
 

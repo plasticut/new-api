@@ -75,10 +75,15 @@ module.exports = function(grunt) {
             }
         },
 
-        open : {
-            debug : {
-              path: 'http://127.0.0.1:8080/debug?port=5858',
-              app: 'google-chrome'
+        open: {
+            debug: {
+                path: 'http://127.0.0.1:8080/debug?port=5858',
+                app: 'google-chrome'
+            },
+
+            docs: {
+                path: 'http://<%= server.host %>:<%= server.docs %>',
+                app: 'google-chrome'
             }
         },
 
@@ -173,21 +178,17 @@ module.exports = function(grunt) {
 
         connect: {
             docs: {
-                options: {
-                    hostname: '<%= server.host %>',
-                    port: '<%= server.docs %>',
-                    open: true,
-                    keepalive: true,
-                    base: [
-                        'docs'
-                    ]
-                }
+                hostname: '<%= server.host %>',
+                port: '<%= server.docs %>',
+                keepalive: true,
+                open: true,
+                base: 'docs'
             }
         },
 
         jsdoc: {
             docs: {
-                src: ['src/**/*.js', 'test/**/*.js'],
+                src: ['src/**/*.js', 'test/**/*.js', 'README.md'],
                 options: {
                     destination: 'docs'
                 }
@@ -221,6 +222,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('docs', [
         'jsdoc',
+        'open:docs',
         'connect:docs'
     ]);
 
