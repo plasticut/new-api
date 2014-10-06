@@ -1,4 +1,4 @@
-var logger = require('../utils/logger')(module);
+var logger = require('./logger')(module);
 
 function setup(passport) {
     var LocalStrategy = require('passport-local').Strategy;
@@ -15,8 +15,11 @@ function setup(passport) {
     function deserializeUser(req, id, next) {
         logger.info('deserializeUser', id);
 
-        req.models.user.find({ id: id }, function(err, user){
+        req.models.user.find({ id: id }, function(err, users){
             if (err) { return next(err); }
+
+            var user = users && users[0];
+
             next(null, user.serialize());
         });
 
@@ -29,9 +32,12 @@ function setup(passport) {
         CONFIGURE BASIC STRATEGY
     */
     function basicStrategyHandler(req, clientId, password, next) {
-        logger.info('basicStrategyHandler', clientId);
+        var ApiClient = req.models.apiClient;
 
-        req.models.apiClient.find({ name: clientId }, function(err, apiClients) {
+        logger.info('basicStrategyHandler', clientId, password);
+
+        ApiClient.find({ name: clientId }, function(err, apiClients) {
+            console.log('1.basicStrategyHandler', err, apiClients);
             if (err) { return next(err); }
 
             var client = apiClients && apiClients[0];
@@ -57,9 +63,11 @@ function setup(passport) {
         CONFIGURE OAUTH2 CLIENT PASSWORD STRATEGY
     */
     function clientPasswordStrategyHandler(req, clientId, password, next) {
-        logger.info('clientPasswordStrategyHandler', clientId);
+        logger.info('clientPasswordStrategyHandler', clientId, password, 'xxx');
 
         req.models.apiClient.find({ name: clientId }, function(err, apiClients) {
+            logger.info('1.clientPasswordStrategyHandler', err, apiClients);
+
             if (err) { return next(err); }
 
             var client = apiClients && apiClients[0];

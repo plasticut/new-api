@@ -1,12 +1,10 @@
 var logger = require('./logger')(module);
-var async = require('async');
 var glob = require('glob');
-var _ = require('lodash');
 
 exports.load = function load(db, dirname, sync, next) {
 
     var error = false;
-    var rels = glob.sync(dirname + '/**/*.js').reduce(function(relations, file) {
+    var rels = glob.sync(dirname + '/*.js').reduce(function(relations, file) {
         try {
             var model = require(file);
             if (model.setupRelations) {
@@ -14,6 +12,7 @@ exports.load = function load(db, dirname, sync, next) {
             } else {
                 model.setup(db);
             }
+
         } catch(err) {
             error = true;
             logger.error('Error loading model ' + file + ':\n   '.red, err.toString());

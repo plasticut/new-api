@@ -54,10 +54,10 @@ mysql -u root -p
 ```
 
 ```sql
-CREATE DATABASE `new-api`;
-CREATE DATABASE `new-api-test`;
+CREATE DATABASE `new_api`;
+CREATE DATABASE `new_api_test`;
 CREATE USER 'dev'@'localhost' IDENTIFIED BY 'eloper';
-GRANT ALL PRIVILEGES ON `new-api`.* TO 'dev'@'localhost';
-GRANT ALL PRIVILEGES ON `new-api-test`.* TO 'dev'@'localhost';
+GRANT ALL PRIVILEGES ON `new_api`.* TO 'dev'@'localhost';
+GRANT ALL PRIVILEGES ON `new_api_test`.* TO 'dev'@'localhost';
 FLUSH PRIVILEGES;
 ```

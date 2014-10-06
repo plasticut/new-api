@@ -17,11 +17,11 @@ var compression = require('compression');
 
 var error = require('./middleware/error');
 var models = require('./middleware/models');
-var passport = require('./middleware/passport');
 
 var routes = require('./routes');
 
-var logger = require('./utils/logger')(module);
+var passport = require('./lib/passport');
+var logger = require('./lib/logger')(module);
 
 
 function setupSessionStore(session, options) {
@@ -89,23 +89,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // allow overriding methods in query (?_method=put)
 app.use(methodOverride('_method'));
 
+// initialize database
+app.use(models());
+
+// initialize passport
 app.use(passport.initialize());
 
 // deserialize user from session to req.user
 app.use(passport.session());
 
-// initialize database
-app.use(models({
-    path: __dirname + '/models',
-    database: config.database
-}));
 
 // init routes
 routes(app);
 
 // error handler
 error(app);
-
 
 
 function start(next) {
@@ -117,6 +115,7 @@ function start(next) {
         key: fs.readFileSync(__dirname + '/../certs/server/my-server.key.pem'),
         cert: fs.readFileSync(__dirname + '/../certs/server/my-server.crt.pem')
     };
+    var db = require('./lib/database');
 
     require('ssl-root-cas')
         .inject()
@@ -133,10 +132,6 @@ function start(next) {
         }
     }
 
-    secureServer = https
-        .createServer(options, app)
-        .listen(config.securePort, onListenSecureServer);
-
     function redirectToSecureServer(req, res) {
         res.setHeader('Location', 'https://' + req.headers.host.replace(/:\d+/, ':' + config.securePort));
         res.statusCode = 302;
@@ -151,9 +146,20 @@ function start(next) {
         }
     }
 
-    server = http
-        .createServer(redirectToSecureServer)
-        .listen(config.port, onListerServer);
+    function onDatabaseSetup(err) {
+        if (err) {
+            logger.error(('Can`t setup database').red, err);
+            return next(err);
+        }
+        secureServer = https.createServer(options, app).listen(config.securePort, onListenSecureServer);
+        server = http.createServer(redirectToSecureServer).listen(config.port, onListerServer);
+    }
+
+    var dbOptions = {
+        path: __dirname + '/models',
+        database: config.database
+    };
+    db.setup(dbOptions, onDatabaseSetup);
 
     return app;
 }

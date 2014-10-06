@@ -2,8 +2,8 @@ var mysql = require('mysql');
 var orm = require('orm');
 
 var config = require('./config');
-var modelLoader = require(config.pathUncovered + 'utils/model-loader');
-var controllerLoader = require(config.pathUncovered + 'utils/controller-loader');
+var modelLoader = require(config.pathUncovered + 'lib/model-loader');
+var controllerLoader = require(config.pathUncovered + 'lib/controller-loader');
 
 function dropTestDb(next){
     module.exports.db.close();

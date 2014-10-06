@@ -6,7 +6,7 @@ module.exports = {
 
     'database': {
         'protocol' : 'mysql',
-        'database' : 'new-api',
+        'database' : 'new_api',
         'host'     : 'localhost',
         'port'     : 3306,
         'user'     : 'dev',
@@ -16,7 +16,23 @@ module.exports = {
             'debug'    : false,
             'strdates' : false
         },
-        'sync': true
+        'sync': true,
+
+        'defaults': {
+            'apiClient': {
+                'name': 'new-ui',
+                'displayName': 'New UI',
+                'password': 'demo'
+            },
+            'user': {
+                'name': 'Test user',
+                'userName': 'dev',
+                'password': 'eloper'
+            },
+            'accessToken': {
+                'token': 'test-token'
+            }
+        }
     },
 
     'session': {

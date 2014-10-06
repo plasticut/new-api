@@ -1,8 +1,8 @@
-var logger = require('../utils/logger')(module);
+var logger = require('../lib/logger')(module);
 
 module.exports = function (options) {
     var express = require('express');
-    var controllerLoader = require('../utils/controller-loader');
+    var controllerLoader = require('../lib/controller-loader');
     var _ = require('lodash');
 
     require('express-crud');

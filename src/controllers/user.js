@@ -1,9 +1,9 @@
 /**
     @module controllers/user
 */
-var logger = require('../utils/logger')(module);
+var logger = require('../lib/logger')(module);
 var models = {}; // automatically mounts on module load
-var handleError = require('../utils/handle-error');
+var handleError = require('../lib/handle-error');
 
 module.exports = {
 

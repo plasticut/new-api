@@ -6,6 +6,6 @@ module.exports = [
     passport.authenticate('bearer', { session: false }),
     controllers({
         path: __dirname + '/../controllers',
-        middleware: require('../controller-middleware')
+        middleware: require('../lib/controller-middleware')
     })
 ];

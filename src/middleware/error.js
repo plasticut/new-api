@@ -1,4 +1,4 @@
-var logger = require('../utils/logger')(module);
+var logger = require('../lib/logger')(module);
 var util = require('util');
 var accepts = require('accepts');
 var _ = require('lodash');

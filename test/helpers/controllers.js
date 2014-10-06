@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var config = require('./config');
-var controllerLoader = require(config.pathUncovered + 'utils/controller-loader');
+var controllerLoader = require(config.pathUncovered + 'lib/controller-loader');
 
 var controllers = controllerLoader.load(config.pathCovered + 'controllers');
 

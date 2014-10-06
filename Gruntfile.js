@@ -25,7 +25,7 @@ module.exports = function(grunt) {
             },
             dev: {
                 src: [
-                    'lib/**/*.js',
+                    'src/**/*.js',
                     'test/**/*.js',
                     'index.js',
                     'Gruntfile.js'
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
             },
             scripts: {
                 files: [
-                    'lib/app/**/*.js'
+                    'src/app/**/*.js'
                 ],
                 tasks: [
                     'jshint',
@@ -108,7 +108,7 @@ module.exports = function(grunt) {
                 options: {
                 },
                 files: {
-                    '<%= paths.coverage %>/lib': 'lib/'
+                    '<%= paths.coverage %>/src': 'src/'
                 }
             }
         },
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
 
         jsdoc: {
             docs: {
-                src: ['lib/**/*.js', 'test/**/*.js'],
+                src: ['src/**/*.js', 'test/**/*.js'],
                 options: {
                     destination: 'docs'
                 }
