@@ -3,3 +3,4 @@ node_modules
 coverage
 certs
 *.log
+database.json
