@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
     require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
-
+    var dbConfig = ('src/config').database;
 
     grunt.initConfig({
 
@@ -111,6 +111,12 @@ module.exports = function(grunt) {
                     '<%= paths.coverage %>/src': 'src/'
                 }
             }
+        },
+
+        migrate: {
+            options: {
+                verbose: true,
+            },
         },
 
         /*

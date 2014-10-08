@@ -37,7 +37,9 @@
     "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.2",
     "ssl-root-cas": "^1.1.7",
-    "winston": "^0.8.0"
+    "winston": "^0.8.0",
+    "grunt-db-migrate": "^0.2.0",
+    "db-migrate": "^0.7.1"
   },
   "devDependencies": {
     "assert": "^1.1.2",
