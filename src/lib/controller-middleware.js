@@ -1,3 +1,7 @@
+/**
+    @module lib/controller-middleware
+*/
+
 var logger = require('./logger')(module);
 
 module.exports = {

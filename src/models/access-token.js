@@ -1,3 +1,7 @@
+/**
+    @module models/access-token
+*/
+
 var logger = require('../lib/logger')(module);
 var _ = require('lodash');
 var uuid = require('node-uuid');

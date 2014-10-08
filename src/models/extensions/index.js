@@ -1,7 +1,13 @@
+/**
+    @module models/extensions/index
+*/
+
 var _ = require('lodash');
 
 /**
-    methods, ext names
+    @method
+    @param {...(string|Object)} module Name or object with methods
+    @return {Object} Object with methods
 */
 function setupExtensions() {
 

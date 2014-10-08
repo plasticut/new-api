@@ -1,3 +1,7 @@
+/**
+    @module routes/index
+*/
+
 module.exports = function(app) {
 
     var session = require('./session');

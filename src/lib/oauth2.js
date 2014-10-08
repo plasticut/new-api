@@ -1,6 +1,7 @@
 /**
- * Module dependencies.
- */
+    @module lib/oauth2
+*/
+
 var oauth2orize = require('oauth2orize'),
     passport = require('passport'),
     login = require('connect-ensure-login'),

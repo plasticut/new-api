@@ -1,3 +1,7 @@
+/**
+    @module models/api-client
+*/
+
 var logger = require('../lib/logger')(module);
 var _ = require('lodash');
 var orm = require('orm');

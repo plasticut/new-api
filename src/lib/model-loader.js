@@ -1,3 +1,7 @@
+/**
+    @module lib/model-loader
+*/
+
 var logger = require('./logger')(module);
 var glob = require('glob');
 

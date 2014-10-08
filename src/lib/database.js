@@ -1,3 +1,7 @@
+/**
+    @module lib/database
+*/
+
 var logger = require('./logger')(module),
     modelLoader = require('./model-loader'),
     _ = require('lodash'),

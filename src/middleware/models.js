@@ -1,3 +1,7 @@
+/**
+    @module middleware/models
+*/
+
 var logger = require('../lib/logger')(module);
 
 var database = require('../lib/database');

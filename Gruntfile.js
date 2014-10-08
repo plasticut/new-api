@@ -21,7 +21,8 @@ module.exports = function(grunt) {
         jshint: {
             options: {
                 reporter: 'node_modules/jshint-stylish/stylish.js',
-                jshintrc: true
+                jshintrc: true,
+                force: true
             },
             dev: {
                 src: [
@@ -49,13 +50,50 @@ module.exports = function(grunt) {
             }
         },
 
+        concurrent: {
+            options: {
+                logConcurrentOutput: true
+            },
+            debug: {
+                tasks: ['nodemon:debug', 'node-inspector:debug', 'open:debug'],
+            }
+        },
+
+        'node-inspector': {
+            debug: {
+                options: {
+                }
+            }
+        },
+
+        nodemon: {
+            debug: {
+                script: 'index.js',
+                options: {
+                    nodeArgs: ['--debug']
+                }
+            }
+        },
+
+        open: {
+            debug: {
+                path: 'http://127.0.0.1:8080/debug?port=5858',
+                app: 'google-chrome'
+            },
+
+            docs: {
+                path: 'http://<%= server.host %>:<%= server.docs %>',
+                app: 'google-chrome'
+            }
+        },
+
         watch: {
             options: {
                 nospawn: true
             },
             scripts: {
                 files: [
-                    'src/app/**/*.js'
+                    'src/**/*.js'
                 ],
                 tasks: [
                     'jshint',
@@ -146,21 +184,17 @@ module.exports = function(grunt) {
 
         connect: {
             docs: {
-                options: {
-                    hostname: '<%= server.host %>',
-                    port: '<%= server.docs %>',
-                    open: true,
-                    keepalive: true,
-                    base: [
-                        'docs'
-                    ]
-                }
+                hostname: '<%= server.host %>',
+                port: '<%= server.docs %>',
+                keepalive: true,
+                open: true,
+                base: 'docs'
             }
         },
 
         jsdoc: {
             docs: {
-                src: ['src/**/*.js', 'test/**/*.js'],
+                src: ['src/**/*.js', 'test/**/*.js', 'README.md'],
                 options: {
                     destination: 'docs'
                 }
@@ -174,6 +208,10 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
         'jshint:dev',
         'watch:scripts'
+    ]);
+
+    grunt.registerTask('debug', [
+        'concurrent:debug'
     ]);
 
     grunt.registerTask('test', [
@@ -190,6 +228,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('docs', [
         'jsdoc',
+        'open:docs',
         'connect:docs'
     ]);
 

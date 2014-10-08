@@ -1,3 +1,6 @@
+/**
+    @module routes/api
+*/
 
 var passport = require('passport');
 var controllers = require('../middleware/controllers');

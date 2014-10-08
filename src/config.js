@@ -1,3 +1,7 @@
+/**
+    @module config
+*/
+
 var config = {
     'production': process.env.NODE_ENV === 'production',
 

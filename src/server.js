@@ -149,7 +149,7 @@ function start(next) {
     function onDatabaseSetup(err) {
         if (err) {
             logger.error(('Can`t setup database').red, err);
-            return next(err);
+            return next && next(err);
         }
         secureServer = https.createServer(options, app).listen(config.securePort, onListenSecureServer);
         server = http.createServer(redirectToSecureServer).listen(config.port, onListerServer);
