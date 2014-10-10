@@ -1,13 +1,36 @@
 body {
-    padding: 10% 0;
+    font-family: Droid Serif, Calibri, Arial;
     margin: 0;
-    background-color: #777;
+    background-color: white;
+}
+div.container, div.message{
+    padding-left: 100px;
+    padding-top: 100px;
+}
+div {
+
+    background-color: white;
+    color: black;
+    padding: 0;
+    {text-shadow: 1px 1px 4px black;}
+    {box-shadow: inset 0px 0px 8px black;}
 }
 
-div {
-    background-color: #333;
-    color: #eee;
-    padding: 20px 5%;
-    text-shadow: 1px 1px 4px black;
-    box-shadow: inset 0px 0px 8px black;
+.loginform label{
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding-left: 3px;
+}
+
+.loginform input{
+    font-size: 24px;
+}
+
+.loginform button.login{
+    width: 100px;
+    height: 35px;
+    margin-top: 20px;
+    margin-left: 2px;
+    font-size: 14px;
 }
