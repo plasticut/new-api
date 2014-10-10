@@ -21,6 +21,7 @@ __Docs:__
 * [Controllers](/lib/controllers/README.md)
 * [Middleware](/lib/middleware/README.md)
 * [Samples](/samples/README.md)
+* [Migrations](/migrations/README.md)
 
 
 __Authorization:__
