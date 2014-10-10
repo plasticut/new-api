@@ -3,3 +3,4 @@ docs
 coverage
 certs
 *.log
+src/lib/app

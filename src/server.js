@@ -16,7 +16,6 @@ var methodOverride = require('method-override');
 var compression = require('compression');
 
 var error = require('./middleware/error');
-var models = require('./middleware/models');
 
 var routes = require('./routes');
 
@@ -89,15 +88,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // allow overriding methods in query (?_method=put)
 app.use(methodOverride('_method'));
 
-// initialize database
-app.use(models());
-
 // initialize passport
 app.use(passport.initialize());
 
 // deserialize user from session to req.user
 app.use(passport.session());
-
 
 // init routes
 routes(app);

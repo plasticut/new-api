@@ -1,0 +1,1 @@
+web: NODE_ENV=production /app/bin/node index.js

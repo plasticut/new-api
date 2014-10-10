@@ -42,24 +42,19 @@ function formatError(err) {
 
 module.exports = function(app, options) {
 
-
     // Render 5xx error
     app.use(function(err, req, res, next){
-        logger.info('5xx');
+        if (err.stack) {
+            logger.error(err.stack);
+        } else {
+            logger.error(err);
+        }
 
         var accept = accepts(req);
         var type = accept.types('html', 'json', 'text');
 
         if (type==='json') {
             var error = formatError(err);
-
-            if (!app.isProduction) {
-                logger.error(('ERROR ' + (err.status || 500)).red, inspect(error, null, 4));
-                if (err.stack) {
-                    logger.error(err.stack);
-                }
-            }
-
             res.status(err.status || 500).json({ error: error });
         } else {
             if (type==='html') {
@@ -74,7 +69,6 @@ module.exports = function(app, options) {
 
     // Render 404 error
     app.use(function(req, res, next){
-        logger.info('404');
 
         var accept = accepts(req);
         var type = accept.types('html', 'json', 'text');

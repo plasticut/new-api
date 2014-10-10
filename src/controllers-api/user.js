@@ -2,14 +2,18 @@
     @module controllers/user
 */
 
+var errHandler = require('err-handler');
 var logger = require('../lib/logger')(module);
-var handleError = require('../lib/handle-error');
 var db = require('../lib/database');
 
 module.exports = {
 
-    before: [
-    ],
+    beforeAll: ['bearer'],
+    beforeCreate: [],
+    beforeDelete: [],
+    beforeRead: [],
+    beforeReadById: [],
+    beforeUpdate: [],
 
     /**
         @method
@@ -24,7 +28,7 @@ module.exports = {
             next(null, user);
         }
 
-        User.create([model], handleError(next, onCreateUser));
+        User.create([model], errHandler(next, onCreateUser));
     },
 
     /**
@@ -41,11 +45,10 @@ module.exports = {
         }
 
         function onGetUser(user) {
-            // suppress NOT_FOUND error
-            user.remove(handleError(next, onDeleteUser));
+            user.remove(errHandler(next, onDeleteUser));
         }
 
-        User.get(id, handleError(next, onGetUser));
+        User.get(id, errHandler(next, onGetUser));
     },
 
     /**
@@ -60,7 +63,7 @@ module.exports = {
             next(null, users);
         }
 
-        User.find({}, handleError(next, onGetUsers));
+        User.find({}, errHandler(next, onGetUsers));
     },
 
     /**
@@ -76,7 +79,7 @@ module.exports = {
             next(null, user);
         }
 
-        User.get(id, handleError(next, onGetUser));
+        User.get(id, errHandler(next, onGetUser));
     },
 
     /**
@@ -93,6 +96,6 @@ module.exports = {
             user.save(model, next);
         }
 
-        User.get(id, handleError(next, onGetUser));
+        User.get(id, errHandler(next, onGetUser));
     }
 };
