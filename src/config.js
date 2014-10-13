@@ -18,6 +18,9 @@ var config = {
                 'port': process.env.REDIS_PORT || 6379
             }
         }
+    },
+    'token': {
+        'expiresIn': 86400 //время жизни accessToken в секундах
     }
 };
 
@@ -56,7 +59,7 @@ config.database = {
             'token': 'test-token'
         }
     }
-}
+};
 
 
 module.exports = config;
