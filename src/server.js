@@ -2,7 +2,6 @@
     Main server module
     @module server
 */
-
 var config = require('./config');
 
 var express = require('express');
@@ -82,6 +81,7 @@ app.use(session({
     store: setupSessionStore(session, config.session.store)
 }));
 
+
 // parse request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
@@ -157,9 +157,10 @@ function start(next) {
 
     var dbOptions = {
         path: __dirname + '/models',
-        database: config.database
+        database: config.database,
+        debug: false
     };
-    db.setup(dbOptions, onDatabaseSetup);
+    db.setup(dbOptions, config.database.defaults, onDatabaseSetup);
 
     return app;
 }
