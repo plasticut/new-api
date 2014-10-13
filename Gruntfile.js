@@ -44,6 +44,9 @@ module.exports = function(grunt) {
                         src: [
                             '**/*.js'
                         ]
+                    },{
+                        dest: '<%= paths.coverage %>/',
+                        src: 'database.json'
                     }
                 ]
             }
