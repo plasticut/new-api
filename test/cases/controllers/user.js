@@ -1,29 +1,28 @@
-var assert = require('assert');
+// var assert = require('assert');
 
-var database = require('../../helpers/database');
-var controllers = require('../../helpers/controllers');
+// var database = require('../../helpers/database');
+// var controllers = require('../../helpers/controllers');
 
-describe('controllers', function() {
+// describe('controllers', function() {
 
-    before(database.create);
+//     before(database.create);
 
-    describe('user', function() {
-        var user = controllers.user;
+//     describe('user', function() {
+//         var user = controllers.user;
 
-        describe('create', function() {
-            it('should return', function(done) {
-                controllers.attach(database);
+//         describe('create', function() {
+//             it('should return', function(done) {
+//                 controllers.attach(database);
 
-                user.create({}, { name: 'test-name', surname: 'test-surname' }, function(err, res) {
-                    if (err) { return done(err); }
+//                 user.create({}, { name: 'test-name', surname: 'test-surname' }, function(err, res) {
+//                     if (err) { return done(err); }
 
-                    assert.deepEqual(res, [{'name':'test-name','surname':'test-surname','id':1}]);
+//                     assert.deepEqual(res, [{'name':'test-name','surname':'test-surname','id':1}]);
 
-                    done();
-                });
-            });
-        });
-
-        after(database.drop);
-    });
-});
+//                     done();
+//                 });
+//             });
+//         });
+//         after(database.drop);
+//     });
+// });
