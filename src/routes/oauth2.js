@@ -2,10 +2,10 @@
     @module routes/oauth2
 */
 
-var db = require('../lib/database'),
-    login = require('connect-ensure-login'),
-    logger = require('../lib/logger')(module),
-    oauth2 = require('../lib/oauth2'),
+var db       = require('../lib/database'),
+    login    = require('connect-ensure-login'),
+    logger   = require('../lib/logger')(module),
+    oauth2   = require('../lib/oauth2'),
     passport = require('passport');
 
 // user authorization endpoint

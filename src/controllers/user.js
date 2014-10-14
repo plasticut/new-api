@@ -2,9 +2,9 @@
     @module controllers/user
 */
 
-var logger = require('../lib/logger')(module);
-var handleError = require('../lib/handle-error');
-var db = require('../lib/database');
+    var logger = require('../lib/logger')(module);
+    var handleError = require('../lib/handle-error');
+    var db = require('../lib/database');
 
 module.exports = {
 

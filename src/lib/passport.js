@@ -130,19 +130,24 @@ function setup(passport) {
     function bearerStrategyHandler(req, accessToken, next) {
         logger.info('bearerStrategyHandler', accessToken);
 
-        req.models.user.find({ accessToken: accessToken }, function(err, users) {
+        req.models.accessToken.find({ value: accessToken }, function(err, tokens) {
             if (err) { return next(err); }
 
-            var user = users && users[0];
-
-            if (!user) { return next(null, false); }
-
-            user.save({ accessDate: new Date() }, function(err, user) {
-                if (err) { return next(err); }
-
-                next(null, user.serialize());
+            var token = tokens && tokens[0];
+            if (!token) {
+                return next(null, false, {message: 'invalid access token'});
+            }
+            if(token.expired()){
+                return next(null, false, {message: 'expired access token'});
+            }
+            req.models.user.find({id: token.userId}, function(err, users){
+                var user = users && users[0];
+                if(!user) { return next(null,false); }
+                user.save({ accessDate: new Date() }, function(err, user) {
+                    if (err) { return next(err); }
+                    next(null, user.serialize());
+                });
             });
-
         });
     }
 

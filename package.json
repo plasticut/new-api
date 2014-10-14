@@ -51,6 +51,7 @@
     "grunt-contrib-copy": "^0.6.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-db-migrate": "^0.2.0",
     "grunt-jsdoc": "^0.5.7",
     "grunt-mocha-test": "^0.12.1",
     "grunt-node-inspector": "^0.1.5",
@@ -60,7 +61,7 @@
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^0.6.0",
     "mocha": "^1.21.4",
-    "time-grunt": "^1.0.0",
-    "grunt-db-migrate": "^0.2.0"
+    "supertest": "^0.14.0",
+    "time-grunt": "^1.0.0"
   }
 }
