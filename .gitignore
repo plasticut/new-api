@@ -3,4 +3,6 @@ docs
 coverage
 certs
 *.log
+database.json
+.idea
 src/lib/app

@@ -3,7 +3,6 @@ module.exports = function(grunt) {
     require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
 
-
     grunt.initConfig({
 
         pkg: grunt.file.readJSON('./package.json'),
@@ -45,6 +44,9 @@ module.exports = function(grunt) {
                         src: [
                             '**/*.js'
                         ]
+                    },{
+                        dest: '<%= paths.coverage %>/',
+                        src: 'database.json'
                     }
                 ]
             }
@@ -149,6 +151,12 @@ module.exports = function(grunt) {
                     '<%= paths.coverage %>/src': 'src/'
                 }
             }
+        },
+
+        migrate: {
+            options: {
+                verbose: true,
+            },
         },
 
         /*

@@ -21,15 +21,18 @@ __Docs:__
 * [Controllers](/lib/controllers/README.md)
 * [Middleware](/lib/middleware/README.md)
 * [Samples](/samples/README.md)
+* [Migrations](/migrations/README.md)
 
 
-Authorization:
+__Authorization:__
 
 * header: 'authorization': 'bearer {token}'
 * body: access_token={token}
 * query: access_token={token}
 
 __Prepare database:__
+
+copy database-example.json to database.json, then:
 
 ```shell
 sudo subl /etc/mysql/my.cnf
@@ -63,3 +66,5 @@ GRANT ALL PRIVILEGES ON `new_api`.* TO 'dev'@'localhost';
 GRANT ALL PRIVILEGES ON `new_api_test`.* TO 'dev'@'localhost';
 FLUSH PRIVILEGES;
 ```
+
+TODO: написать тест, cравнивающий сгенерированную через node-orm.sync базу с базой, созданной db-migrate.

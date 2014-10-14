@@ -1,6 +1,7 @@
-
+var config = require('./config');
+var server = require(config.pathUncovered + 'server.js');
 function startServer(next) {
-    next();
+    server.start(next);
 }
 
 function stopServer(next){

@@ -37,10 +37,12 @@
     "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.2",
     "ssl-root-cas": "^1.1.7",
-    "winston": "^0.8.0"
+    "winston": "^0.8.0",
+    "db-migrate": "^0.7.1"
   },
   "devDependencies": {
     "assert": "^1.1.2",
+    "chai": "^1.9.2",
     "grunt": "^0.4.5",
     "grunt-blanket": "0.0.8",
     "grunt-concurrent": "^1.0.0",
@@ -49,6 +51,7 @@
     "grunt-contrib-copy": "^0.6.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-db-migrate": "^0.2.0",
     "grunt-jsdoc": "^0.5.7",
     "grunt-mocha-test": "^0.12.1",
     "grunt-node-inspector": "^0.1.5",
@@ -58,6 +61,7 @@
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^0.6.0",
     "mocha": "^1.21.4",
+    "supertest": "^0.14.0",
     "time-grunt": "^1.0.0"
   }
 }

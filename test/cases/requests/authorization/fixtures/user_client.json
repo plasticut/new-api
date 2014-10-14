@@ -1,0 +1,19 @@
+[{
+    "model": "apiClient",
+    "data": {
+        "id": "1",
+        "name": "new-ui",
+        "password": "$2a$10$7oiqaVFYbOuW/jYMcKKG/eEN.70RWmG6VOUgPIa8exhK8713vdmKe",
+        "displayName": "New UI"
+    }
+},
+{
+    "model": "user",
+    "data":{
+        "id": "1",
+        "userName": "vasya",
+        "password": "$2a$10$982I2I2v8Gwkm7mJma6K4eGj8IQT.B972ZZUeDpI1EVq2InMh7Qh2",
+        "name": "vasya",
+        "surname": "JUST VASYA!"
+    }
+}]

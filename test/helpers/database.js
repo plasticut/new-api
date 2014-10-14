@@ -1,69 +1,59 @@
-var mysql = require('mysql');
 var orm = require('orm');
-
+process.env.NODE_ENV = 'test';
 var config = require('./config');
-var modelLoader = require(config.pathUncovered + 'lib/model-loader');
-var controllerLoader = require(config.pathUncovered + 'lib/controller-loader');
+var path = config.pathUncovered;
+var modelLoader = require(path + 'lib/model-loader');
+var database = require(config.pathCovered+'lib/database');
+var async = require('async');
+
+
+var connectionData = {
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.user,
+    password: config.database.password
+};
 
 function dropTestDb(next){
-    module.exports.db.close();
-
-    var connection = mysql.createConnection({
-        host: config.database.host,
-        port: config.database.port,
-        user: config.database.user,
-        password: config.database.password
-    });
-
-    connection.connect(function(err, res) {
-        if (err) { return next(err); }
-
-        connection.query('DROP DATABASE ' + config.database.database, function(err) {
-            connection.end();
-
-            if (err) { return next(err); }
-
-            next();
-        });
-    });
-
+    database.db.drop(next);
 }
 
-function createTestDb(next){
+function truncateTable(tablenames, next){
+    var query = function(tablename){
+        return 'TRUNCATE TABLE ' + config.database.database + '.' + tablename;
+    };
 
-    var connection = mysql.createConnection({
-        host: config.database.host,
-        port: config.database.port,
-        user: config.database.user,
-        password: config.database.password
+    var q = async.queue(function(tablename, callback){
+        database.db.driver.execQuery(query(tablename), callback)
+    }, tablenames.length);
+
+    q.drain = function(err){
+        next(err);
+    };
+
+    q.push(tablenames, function(err){
+        if(err){
+            q.kill();
+            next(err);
+        }
     });
+}
 
-    connection.connect(function(err, res) {
-        if (err) { return next(err); }
 
-        connection.query('CREATE DATABASE IF NOT EXISTS ' + config.database.database, function(err) {
-            connection.end();
-
-            if (err) { return next(err); }
-
-            orm.connect(config.database, function(err, db) {
-                if (err) { return next(err); }
-
-                modelLoader.load(db, config.pathCovered + 'models', true, function(err) {
-                    if (err) { return next(err); }
-
-                    module.exports.db = db;
-
-                    next();
-                });
-            });
-        });
+function setupTestDb(next){
+    var dbOptions = {
+        path: path + 'models',
+        database: config.database,
+        debug: false
+    };
+    database.setup(dbOptions, null, function(err){
+        next(err, database);
     });
-
 }
 
 module.exports = {
     db: null,
     drop: dropTestDb,
-    create: createTestDb
+    setup: setupTestDb,
+    truncate: truncateTable
 };

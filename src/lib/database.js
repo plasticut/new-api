@@ -11,6 +11,7 @@ function ucfirst(text) {
     return text[0].toUpperCase() + text.substr(1);
 }
 
+
 function createDefaults(defaults, models, next) {
     var apiClientData = defaults.apiClient;
     var userData = defaults.user;
@@ -27,7 +28,6 @@ function createDefaults(defaults, models, next) {
 
     function onCreateUser(err, user) {
         if (err) { return next(err); }
-
         accessTokenData.userId = user.id;
 
         AccessToken.create(accessTokenData, onCreateAccessToken);
@@ -37,8 +37,8 @@ function createDefaults(defaults, models, next) {
         if (err) { return next(err); }
 
         userData.password = password;
-
         User.create(userData, onCreateUser);
+
     }
 
     function onCreateApiClient(err, apiClient) {
@@ -70,19 +70,22 @@ function createDefaults(defaults, models, next) {
 
 } // createDefaults
 
-function setupDatabase(options, next) {
-
+function setupDatabase(options, defaults, next) {
     orm.connect(options.database, function (err, db) {
         if (err) { return next(err); }
-
         exports.db = db;
 
         modelLoader.load(db, options.path, options.database.sync, function(err) {
             if (err) { return next(err); }
 
             exports.models = db.models;
+            exports.connection = db;
 
-            createDefaults(options.database.defaults, db.models, next);
+            if (defaults) {
+                createDefaults(defaults, db.models, next);
+            } else {
+                next();
+            }
         });
 
     });
