@@ -104,7 +104,7 @@ describe('Fixtures Loader' , function(){
         fs.writeFileSync(fixturesPath+'/testfolder-error/2.json', JSON.stringify(objects2));
         objects1[1].data.id =2;
 
-        dbhelper.setup(function(database){
+        dbhelper.setup(function(err, database){
             self.models = database.models;
             self.fixtLoader = new FixtLoader(database);
             done();
@@ -126,7 +126,7 @@ describe('Fixtures Loader' , function(){
         });
     });
     beforeEach(function(done){
-        dbhelper.truncate('accessToken', done);
+        dbhelper.truncate(['accessToken'], done);
     });
 
     describe('fromObject', function(){

@@ -79,9 +79,11 @@ function setupDatabase(options, defaults, next) {
             if (err) { return next(err); }
 
             exports.models = db.models;
-            if(defaults){
+            exports.connection = db;
+
+            if (defaults) {
                 createDefaults(defaults, db.models, next);
-            }else{
+            } else {
                 next();
             }
         });

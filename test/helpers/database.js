@@ -4,6 +4,7 @@ var config = require('./config');
 var path = config.pathUncovered;
 var modelLoader = require(path + 'lib/model-loader');
 var database = require(config.pathCovered+'lib/database');
+var async = require('async');
 
 
 var connectionData = {
@@ -17,12 +18,24 @@ function dropTestDb(next){
     database.db.drop(next);
 }
 
-function truncateTable(tablename, next){
-    database.db.driver.execQuery('TRUNCATE TABLE ' + config.database.database + '.' + tablename, function(err){
+function truncateTable(tablenames, next){
+    var query = function(tablename){
+        return 'TRUNCATE TABLE ' + config.database.database + '.' + tablename;
+    };
+
+    var q = async.queue(function(tablename, callback){
+        database.db.driver.execQuery(query(tablename), callback)
+    }, tablenames.length);
+
+    q.drain = function(err){
+        next(err);
+    };
+
+    q.push(tablenames, function(err){
         if(err){
-            return next(err);
+            q.kill();
+            next(err);
         }
-        next();
     });
 }
 
@@ -34,7 +47,7 @@ function setupTestDb(next){
         debug: false
     };
     database.setup(dbOptions, null, function(err){
-        next(database);
+        next(err, database);
     });
 }
 
