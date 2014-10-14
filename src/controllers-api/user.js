@@ -1,9 +1,9 @@
 /**
-    @module controllers/user
-*/
+ @module controllers/user
+ */
 
+var errHandler = require('err-handler');
 var logger = require('../lib/logger')(module);
-var handleError = require('../lib/handle-error');
 var db = require('../lib/database');
 
 
