@@ -3,10 +3,12 @@
 */
 
 var logger = require('./logger')(module);
+var passport = require('passport');
 
-module.exports = {
-    'test': function(req, res, next) {
-        logger.info('TEST CRUDL MIDDLEWARE', req.url);
-        next();
-    }
+
+exports.test = function testMiddleware(req, res, next) {
+    logger.info('TEST CRUDL MIDDLEWARE', req.url);
+    next();
 };
+
+exports.bearer = passport.authenticate('bearer', { session: false });

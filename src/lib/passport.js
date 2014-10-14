@@ -3,6 +3,7 @@
 */
 
 var logger = require('./logger')(module);
+var database = require('./database');
 
 function setup(passport) {
     var LocalStrategy = require('passport-local').Strategy;
@@ -19,7 +20,9 @@ function setup(passport) {
     function deserializeUser(req, id, next) {
         logger.info('deserializeUser', id);
 
-        req.models.user.find({ id: id }, function(err, users){
+        var User = database.models.user;
+
+        User.find({ id: id }, function(err, users){
             if (err) { return next(err); }
 
             var user = users && users[0];
@@ -36,9 +39,9 @@ function setup(passport) {
         CONFIGURE BASIC STRATEGY
     */
     function basicStrategyHandler(req, clientId, password, next) {
-        var ApiClient = req.models.apiClient;
-
         logger.info('basicStrategyHandler', clientId, password);
+
+        var ApiClient = database.models.apiClient;
 
         ApiClient.find({ name: clientId }, function(err, apiClients) {
             console.log('1.basicStrategyHandler', err, apiClients);
@@ -69,7 +72,9 @@ function setup(passport) {
     function clientPasswordStrategyHandler(req, clientId, password, next) {
         logger.info('clientPasswordStrategyHandler', clientId, password, 'xxx');
 
-        req.models.apiClient.find({ name: clientId }, function(err, apiClients) {
+        var ApiClient = database.models.apiClient;
+
+        ApiClient.find({ name: clientId }, function(err, apiClients) {
             logger.info('1.clientPasswordStrategyHandler', err, apiClients);
 
             if (err) { return next(err); }
@@ -99,7 +104,9 @@ function setup(passport) {
     function localStrategyHandler(req, username, password, next) {
         logger.info('localStrategyHandler', username);
 
-        req.models.user.find({ username: username }, function(err, users) {
+        var User = database.models.user;
+
+        User.find({ username: username }, function(err, users) {
             if (err) { return next(err); }
 
             var user = users && users[0];
@@ -129,8 +136,8 @@ function setup(passport) {
     */
     function bearerStrategyHandler(req, accessToken, next) {
         logger.info('bearerStrategyHandler', accessToken);
-
-        req.models.accessToken.find({ value: accessToken }, function(err, tokens) {
+        var User = database.models.user;
+        User.find({ accessToken: accessToken }, function(err, users) {
             if (err) { return next(err); }
 
             var token = tokens && tokens[0];

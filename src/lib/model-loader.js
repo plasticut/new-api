@@ -8,21 +8,24 @@ var glob = require('glob');
 exports.load = function load(db, dirname, sync, next) {
 
     var error = false;
-    var rels = glob.sync(dirname + '/*.js').reduce(function(relations, file) {
-        try {
-            var model = require(file);
-            if (model.setupRelations) {
-                relations.push([model.setupRelations, model.setup(db)]);
-            } else {
-                model.setup(db);
-            }
+    var rels = []
+        .concat(dirname)
+        .reduce(function(memo, name) { return memo.concat(glob.sync(name + '/*.js')); }, [])
+        .reduce(function(relations, file) {
+            try {
+                var model = require(file);
+                if (model.setupRelations) {
+                    relations.push([model.setupRelations, model.setup(db)]);
+                } else {
+                    model.setup(db);
+                }
 
-        } catch(err) {
-            error = true;
-            logger.error('Error loading model ' + file + ':\n   '.red, err.toString());
-        }
-        return relations;
-    }, []);
+            } catch(err) {
+                error = true;
+                logger.error('Error loading model ' + file + ':\n   '.red, err.toString());
+            }
+            return relations;
+        }, []);
 
     if (error) {
         return next(new Error('Error loading models'));
