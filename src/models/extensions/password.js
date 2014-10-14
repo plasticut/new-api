@@ -4,6 +4,10 @@ module.exports = {
     verifyPassword: function (password, next) {
         bcrypt.compare(password, this.password, next);
     },
+    verifyHash: function (hash, next){
+        var valid = hash===this.password;
+        next(null, valid);
+    },
 
     encryptPassword: function (password, next) {
         bcrypt.genSalt(10, function(err, salt) {

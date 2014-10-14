@@ -6,6 +6,7 @@ var oauth2orize = require('oauth2orize'),
     passport = require('passport'),
     login = require('connect-ensure-login'),
     database = require('./database'),
+    config = require('../config'),
     logger = require('./logger')(module);
 
 // create OAuth 2.0 server
@@ -87,7 +88,7 @@ server.grant(oauth2orize.grant.token(function(client, user, ares, next) {
     var token = AccessToken.generateToken(); // uid(256)
 
     AccessToken.create({
-        token: token,
+        value: token,
         userId: user.id,
         apiclientId: client.id
     }, function(err) {
@@ -118,7 +119,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, ne
         var token = AccessToken.generateToken(); // uid(256)
 
         AccessToken.create({
-            token: token,
+            value: token,
             userId: authCode.userId,
             apiclientId: authCode.apiclientId
         }, function(err) {
@@ -128,6 +129,8 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, ne
         });
     });
 }));
+
+
 
 
 // Exchange user id and password for access tokens.  The callback accepts the
@@ -146,7 +149,7 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
     function onCreateToken(err, accessToken) {
         if (err) { return next(err); }
 
-        next(null, accessToken.token);
+        next(null, accessToken.value, accessToken.refreshToken, {expires_in: config.token.expiresIn});
     }
 
     function onVerifyUserPassword(err, valid) {
@@ -155,7 +158,9 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
 
         //Everything validated, return the token
         AccessToken.create({
-            token: AccessToken.generateToken(), // uid(256)
+            value: AccessToken.generateToken(), // uid(256)
+            refreshToken: AccessToken.generateToken(),
+            expirationDate: AccessToken.generateExpirationDate(),
             userId: user.id,
             apiclientId: apiClient.id
         }, onCreateToken);
@@ -184,11 +189,32 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
 
         if (apiClient === null) { return next(null, false); }
 
-        apiClient.verifyPassword(client.password, onVerifyApiClientPassword);
+        apiClient.verifyHash(client.password, onVerifyApiClientPassword);
     }
 
     // clientId ?
     ApiClient.find({ name: client.name }, onFindApiClient);
+}));
+
+
+server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken, scope, next){
+    var AccessToken = database.models.accessToken;
+    var at = AccessToken.find({refreshToken: refreshToken}, function(err, tokens){
+        if(err){
+            next(err);
+        }
+        //если refresh_token не подходит ни к одному access_token
+        if(!tokens || !token.length){
+            next(null, false);
+        }
+
+        if(tokens.length>1){
+            //обработать ситуацию, когда по одному refreshToken найдено больше одного accessToken
+            //думаю, надо сбрасывать все, потому что что-то не чисто
+            AccessToken.clearRefresh(refreshToken);
+            next(new Error('Multiple access tokens with one refresh token'));
+        }
+    });
 }));
 
 
@@ -216,7 +242,7 @@ server.exchange(oauth2orize.exchange.clientCredentials(function(client, scope, n
 
         //Pass in a null for user id since there is no user with this grant type
         AccessToken.create({
-            token: AccessToken.generateToken(), // uid(256)
+            value: AccessToken.generateToken(), // uid(256)
             userId: null,
             apiclientId: apiClient.id
         }, onCreateToken);
