@@ -135,27 +135,29 @@ function setup(passport) {
         CONFIGURE BEARER STRATEGY
     */
     function bearerStrategyHandler(req, accessToken, next) {
-        logger.info('bearerStrategyHandler', accessToken);
-        var User = database.models.user;
-        User.find({ accessToken: accessToken }, function(err, users) {
-            if (err) { return next(err); }
-
-            var token = tokens && tokens[0];
-            if (!token) {
-                return next(null, false, {message: 'invalid access token'});
-            }
-            if(token.expired()){
-                return next(null, false, {message: 'expired access token'});
-            }
-            req.models.user.find({id: token.userId}, function(err, users){
-                var user = users && users[0];
-                if(!user) { return next(null,false); }
-                user.save({ accessDate: new Date() }, function(err, user) {
-                    if (err) { return next(err); }
-                    next(null, user.serialize());
+            logger.info('bearerStrategyHandler', accessToken);
+            var AccessToken = database.models.accessToken;
+            var User = database.models.user;
+            AccessToken.find({ value: accessToken }, function(err, tokens) {
+                if (err) { return next(err); }
+                var token = tokens && tokens[0];
+                if (!token) {
+                    return next(null, false, {message: 'invalid access token'});
+                }
+                if(token.expired()){
+                    return token.remove(function(){
+                        next(null, false, {message: 'expired access token'});
+                    });
+                }
+                User.find({id: token.userId}, function(err, users){
+                    var user = users && users[0];
+                    if(!user) { return next(null,false); }
+                    user.save({ accessDate: new Date() }, function(err, user) {
+                        if (err) { return next(err); }
+                        next(null, user.serialize());
+                    });
                 });
             });
-        });
     }
 
     var bearerOptions = {

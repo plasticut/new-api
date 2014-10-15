@@ -19,9 +19,13 @@ var config = {
             }
         }
     },
-    'token': {
-        'expiresIn': 86400 //время жизни accessToken в секундах
+    'accessToken': {
+        'expiresIn': 86400 //время жизни accessToken 1 сутки
+    },
+    'refreshToken': {
+        'expiresIn': 2592000 //время жизни refreshToken 30 суток
     }
+
 };
 
 var env = process.env.NODE_ENV;

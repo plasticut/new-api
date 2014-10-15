@@ -61,7 +61,12 @@ FixtLoader.prototype.fromArray = function(array, done){
     q.push(array, function(err){
         if(err){
             q.kill();
-            done(err, inserted);
+            if(typeof(arr)=='Array'){
+                done(err[0], inserted);
+            }else{
+                done(err, inserted);
+            }
+
         }
     });
 }
@@ -97,7 +102,11 @@ FixtLoader.prototype.fromFolder = function(folderpath, done){
     q.push(files, function(err){
         if(err){
             q.kill();
-            done(err, inserted);
+            if(typeof(arr)=='Array'){
+                done(err[0], inserted);
+            }else{
+                done(err, inserted);
+            }
         }
     });
 

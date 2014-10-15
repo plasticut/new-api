@@ -6,7 +6,10 @@ var expect = chai.expect;
 describe('AccessTokenModel', function() {
     before(function(done){
         var self = this;
-        dbhelper.setup(function(database){
+        dbhelper.setup(function(err, database){
+            if(err){
+                return done(err);
+            }
             self.database = database;
             self.AccessToken = database.models.accessToken;
             done();
