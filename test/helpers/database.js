@@ -1,5 +1,4 @@
 var orm = require('orm');
-process.env.NODE_ENV = 'test';
 var config = require('./config');
 var path = config.pathUncovered;
 var modelLoader = require(path + 'lib/model-loader');
@@ -34,7 +33,12 @@ function truncateTable(tablenames, next){
     q.push(tablenames, function(err){
         if(err){
             q.kill();
-            next(err);
+            if(typeof(arr)=='Array'){
+                next(err[0]);
+            }else{
+                next(err);
+            }
+
         }
     });
 }

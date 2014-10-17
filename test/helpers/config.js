@@ -11,7 +11,6 @@ if (!fs.existsSync(pathUncovered)) {
 
 var config = require(pathUncovered + 'config');
 
-config.database.database = config.database.database  + '_test';
 config.fixturesPath = path.resolve(__dirname + '/../fixtures');
 config.helpersPath = path.resolve(__dirname);
 

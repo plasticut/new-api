@@ -2,12 +2,14 @@
     @module lib/oauth2
 */
 
-var oauth2orize = require('oauth2orize'),
-    passport = require('passport'),
-    login = require('connect-ensure-login'),
-    database = require('./database'),
-    config = require('../config'),
-    logger = require('./logger')(module);
+var oauth2orize  = require('oauth2orize'),
+    passport     = require('passport'),
+    login        = require('connect-ensure-login'),
+    database     = require('./database'),
+    config       = require('../config'),
+    errHandler   = require('err-handler'),
+    logger       = require('./logger')(module),
+    async        = require('async');
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -142,14 +144,32 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
 
     var ApiClient = database.models.apiClient;
     var AccessToken = database.models.accessToken;
+    var RefreshToken = database.models.refreshToken;
     var User = database.models.user;
 
     var user, apiClient;
 
-    function onCreateToken(err, accessToken) {
-        if (err) { return next(err); }
+    function onCreateRefreshToken(accessToken, refreshToken) {
+        next(null, accessToken.value, refreshToken.value, {expires_in: config.accessToken.expiresIn});
+    }
 
-        next(null, accessToken.value, accessToken.refreshToken, {expires_in: config.token.expiresIn});
+    function onCreateAccessToken(err, accessToken){
+        if(err) {
+            return next(err);
+        };
+
+        RefreshToken.create({
+            value: RefreshToken.generateToken(), // uid(256)
+            expirationDate: RefreshToken.generateExpirationDate(),
+            apiclientId: apiClient.id,
+            userId: user.id
+        }, function(err, refreshToken){
+            if(err){
+                return next(err);
+            }
+            onCreateRefreshToken(accessToken, refreshToken);
+        });
+
     }
 
     function onVerifyUserPassword(err, valid) {
@@ -159,11 +179,10 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
         //Everything validated, return the token
         AccessToken.create({
             value: AccessToken.generateToken(), // uid(256)
-            refreshToken: AccessToken.generateToken(),
             expirationDate: AccessToken.generateExpirationDate(),
             userId: user.id,
             apiclientId: apiClient.id
-        }, onCreateToken);
+        }, onCreateAccessToken);
     }
 
     function onFindUser(err, users) {
@@ -199,22 +218,46 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
 
 server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken, scope, next){
     var AccessToken = database.models.accessToken;
-    var at = AccessToken.find({refreshToken: refreshToken}, function(err, tokens){
-        if(err){
-            next(err);
+    var RefreshToken = database.models.refreshToken;
+    RefreshToken.find({value: refreshToken}, errHandler(next, function(tokens){
+        if (tokens.length === 0) {
+            return next(null, false);
         }
-        //если refresh_token не подходит ни к одному access_token
-        if(!tokens || !token.length){
-            next(null, false);
+        var token = tokens[0];
+        if(token.apiclientId !== client.id){
+            return next(null, false);
         }
+        var userid = token.userId;
+        var clientid = token.apiclientId;
+        token.remove(errHandler(next, function(){
+            generateNewTokens(userid, clientid)
+        }));
+    }));
 
-        if(tokens.length>1){
-            //обработать ситуацию, когда по одному refreshToken найдено больше одного accessToken
-            //думаю, надо сбрасывать все, потому что что-то не чисто
-            AccessToken.clearRefresh(refreshToken);
-            next(new Error('Multiple access tokens with one refresh token'));
-        }
-    });
+    var generateNewTokens = function(userid, clientid){
+        async.parallel([function(callback){
+                AccessToken.create({
+                    value: AccessToken.generateToken(), // uid(256)
+                    expirationDate: AccessToken.generateExpirationDate(),
+                    userId: userid,
+                    apiclientId: clientid
+                }, callback);
+            },function(callback){
+                RefreshToken.create({
+                    value: RefreshToken.generateToken(),
+                    expirationDate: RefreshToken.generateExpirationDate(),
+                    userId: userid,
+                    apiclientId: clientid
+                }, callback);
+            }],
+            function(err, tokens){
+                if (err){
+                    return next(err);
+                }
+                next(null, tokens[0].value, tokens[1].value, {expires_in: config.accessToken.expiresIn});
+            }
+        );
+    }
 }));
 
 
